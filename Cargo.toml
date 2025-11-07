@@ -1,10 +1,11 @@
 [package]
 license = "MPL-2.0"
-name = "styluaenhanced"
+name = "stylua-enhanced"
 version = "2.3.1-enhanced.1"
 authors = [
-  "JohnnyMorganz <johnnymorganz@outlook.com>",
-  "Haptic <clippimedia@gmail.com>",
+"Haptic <clippimedia@gmail.com>",
+  "JohnnyMorganz <johnnymorganz@outlook.com>"
+  ,
 ]
 description = "stylua, but out of it's 'opinionated' cage."
 repository = "https://github.com/clippimedia/styluaenhanced"
@@ -21,7 +22,7 @@ crate-type = ["cdylib", "rlib"]
 bench = false
 
 [[bin]]
-name = "stylua"
+name = "stylua-enhanced"
 path = "src/cli/main.rs"
 bench = false
 
