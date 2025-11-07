@@ -87,6 +87,18 @@ property_choice! {
     (False, "false")
 }
 
+property_choice! {
+    PaddedBracketsChoice, "padded_brackets";
+    (True, "true"),
+    (False, "false")
+}
+
+property_choice! {
+    TypeColonPaddingChoice, "type_colon_padding";
+    (True, "true"),
+    (False, "false")
+}
+
 // Override StyLua config with EditorConfig properties
 fn load(mut config: Config, properties: &Properties) -> Config {
     if let Ok(end_of_line) = properties.get::<EndOfLine>() {
@@ -168,6 +180,21 @@ fn load(mut config: Config, properties: &Properties) -> Config {
             }
         }
     }
+
+    if let Ok(padded_brackets) = properties.get::<PaddedBracketsChoice>() {
+        match padded_brackets {
+            PaddedBracketsChoice::True => config.padded_brackets = true,
+            PaddedBracketsChoice::False => config.padded_brackets = false,
+        }
+    }
+
+    if let Ok(type_colon_padding) = properties.get::<TypeColonPaddingChoice>() {
+        match type_colon_padding {
+            TypeColonPaddingChoice::True => config.type_colon_padding = true,
+            TypeColonPaddingChoice::False => config.type_colon_padding = false,
+        }
+    }
+
     if let Ok(sort_requires) = properties.get::<SortRequiresChoice>() {
         match sort_requires {
             SortRequiresChoice::True => config.sort_requires = SortRequiresConfig { enabled: true },

@@ -292,6 +292,9 @@ fn load_overrides(config: Config, opt: &Opt) -> Config {
     if opt.format_opts.sort_requires {
         new_config.sort_requires = SortRequiresConfig { enabled: true }
     }
+    if opt.format_opts.padded_brackets {
+        new_config.padded_brackets = true;
+    }
 
     new_config
 }

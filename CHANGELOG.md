@@ -1,17 +1,27 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [Unreleased]
-
 ## [2.3.1] - 2025-11-01
 
 ### Fixed
 
 - Use character-wised diff instead of byte-wise diff in the LSP server so that it can handle multi-byte characters ([#1042](https://github.com/JohnnyMorganz/StyLua/issues/1042), [#1043](https://github.com/JohnnyMorganz/StyLua/issues/1043)).
+###
+><br/>
+>
+> # **ENHANCED**
+> **[2.3.1-enhanced.1]** - *2025-11-07*
+> ### Added Rules:
+> ```yaml
+>   padded_brackets: boolean
+> ```
+> ```yaml
+>   type_colon_padding: boolean
+> ```
+><br/>
+>
+> - [x] All tests are passing.
+>
+><br>
 
 ## [2.3.0] - 2025-09-27
 
@@ -868,6 +878,7 @@ This feature is enabled by default, it can be disabled using `--no-editorconfig`
 Initial alpha release
 
 [unreleased]: https://github.com/JohnnyMorganz/StyLua/compare/v2.3.1...HEAD
+[2.3.1-enhanced.1]: https://github.com/clippimedia/styluaenhanced/releases/tag/v2.3.1-enhanced
 [2.3.1]: https://github.com/JohnnyMorganz/StyLua/releases/tag/v2.3.1
 [2.3.0]: https://github.com/JohnnyMorganz/StyLua/releases/tag/v2.3.0
 [2.2.0]: https://github.com/JohnnyMorganz/StyLua/releases/tag/v2.2.0

@@ -260,8 +260,20 @@ fn format_expression_internal(
                     .update_leading_trivia(FormatTriviaType::Append(leading_comments))
                     .update_trailing_trivia(FormatTriviaType::Append(trailing_comments))
             } else {
+                let (start_paren, end_paren) = contained.tokens();
+                let start_paren = if ctx.config().padded_brackets {
+                    fmt_symbol!(ctx, start_paren, "( ", shape)
+                } else {
+                    fmt_symbol!(ctx, start_paren, "(", shape)
+                };
+                let end_paren = if ctx.config().padded_brackets {
+                    fmt_symbol!(ctx, end_paren, " )", shape)
+                } else {
+                    fmt_symbol!(ctx, end_paren, ")", shape)
+                };
+
                 Expression::Parentheses {
-                    contained: format_contained_span(ctx, contained, shape),
+                    contained: ContainedSpan::new(start_paren, end_paren),
                     expression: Box::new(format_expression(ctx, expression, shape + 1)), // 1 = opening parentheses
                 }
             }
@@ -464,8 +476,19 @@ pub fn format_index(ctx: &Context, index: &Index, shape: Shape) -> Index {
                         )])),
                 }
             } else {
+                let (start_bracket, end_bracket) = brackets.tokens();
+                let start_bracket = if ctx.config().padded_brackets {
+                    fmt_symbol!(ctx, start_bracket, "[ ", shape)
+                } else {
+                    fmt_symbol!(ctx, start_bracket, "[", shape)
+                };
+                let end_bracket = if ctx.config().padded_brackets {
+                    fmt_symbol!(ctx, end_bracket, " ]", shape)
+                } else {
+                    fmt_symbol!(ctx, end_bracket, "]", shape)
+                };
                 Index::Brackets {
-                    brackets: format_contained_span(ctx, brackets, shape),
+                    brackets: ContainedSpan::new(start_bracket, end_bracket),
                     expression: format_expression(ctx, expression, shape + 1), // 1 = opening bracket
                 }
             }
