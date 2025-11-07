@@ -279,6 +279,7 @@ pub struct Config {
     /// * if space_after_function_names is set to [`SpaceAfterFunctionNames::Calls`] a space is used only for calls.
     /// * if space_after_function_names is set to [`SpaceAfterFunctionNames::Always`] a space is used for both definitions and calls.
     pub space_after_function_names: SpaceAfterFunctionNames,
+    pub padded-brackets: bool,
 }
 
 #[cfg_attr(all(target_arch = "wasm32", feature = "wasm-bindgen"), wasm_bindgen)]
@@ -305,6 +306,7 @@ impl Default for Config {
             sort_requires: SortRequiresConfig::default(),
             space_after_function_names: SpaceAfterFunctionNames::default(),
             block_newline_gaps: BlockNewlineGaps::default(),
+            padded-brackets: true,
         }
     }
 }
