@@ -1,140 +1,30 @@
 <div align="center">
-	<h1>
-		StyLua<br>
-		<a href="https://crates.io/crates/stylua"><img src="https://img.shields.io/crates/v/stylua.svg"></a>
-    <a href="https://github.com/JohnnyMorganz/StyLua/actions/workflows/ci.yml"><img src="https://github.com/JohnnyMorganz/StyLua/actions/workflows/ci.yml/badge.svg"></a>
-    <a href="https://codecov.io/gh/JohnnyMorganz/StyLua"><img src="https://codecov.io/gh/JohnnyMorganz/StyLua/branch/main/graph/badge.svg"/></a>
-	</h1>
+
+# StyLuaENHANCED
+<code>          a deopinionated fork of <a href="https://github.com/JohnnyMorganz/StyLua/">johnnymorganz/stylua</a>          </code>
+
 </div>
 
-A deterministic code formatter for Lua 5.1, 5.2, 5.3, 5.4, LuaJIT, [Luau](https://luau.org/) and [CfxLua/FiveM Lua](https://docs.fivem.net/docs/scripting-manual/runtimes/lua/), built using [full-moon](https://github.com/Kampfkarren/full-moon).
-StyLua is inspired by the likes of [prettier](https://github.com/prettier/prettier), it parses your Lua codebase, and prints it back out from scratch,
-enforcing a consistent code style.
+> [!NOTE]
+> - - #### Rule Additions
+>     ```yaml
+>     padded_brackets: boolean
+>     type_colon_padding: boolean
+>     ```
 
-StyLua mainly follows the [Roblox Lua Style Guide](https://roblox.github.io/lua-style-guide/), with a few deviations.
+StyLuaEnhanced mainly follows the [Roblox Lua Style Guide](https://roblox.github.io/lua-style-guide/), with *<strike>a few deviations</strike>* **tons of gooey options**!
+<div align="center">
+  
+<sub><sub> ***because fuck opinionated and your opinion about that statement***<sub>  \</edge></sub></sub></sub></div>
+
 
 ## Installation
 
-There are multiple ways to install StyLua:
-
 ### With Github Releases
 
-Pre-built binaries are available on the [GitHub Releases Page](https://github.com/JohnnyMorganz/StyLua/releases).
+Pre-built binaries are available on the [GitHub Releases Page](https://github.com/clippimedia/styluaenhanced/releases).
 
 By default, these are built with **all syntax variants enabled (Lua 5.2, 5.3, 5.4, LuaJIT and Luau)**, to cover all possible codebases.
-See [configuring runtime syntax selection](#configuring-runtime-syntax-selection) if you need to select a particular syntax of Lua to format.
-Alternatively, see [installing from crates.io](#from-cratesio) on how to install a particular flavour of StyLua.
-
-### From Crates.io
-
-If you have [Rust](https://www.rust-lang.org/) installed, you can install StyLua using cargo.
-By default, this builds for just Lua 5.1.
-You can pass the `--features <flag>` argument to add extra syntax variants:
-
-```sh
-cargo install stylua
-cargo install stylua --features lua52
-cargo install stylua --features lua53
-cargo install stylua --features lua54
-cargo install stylua --features luajit
-cargo install stylua --features luau
-```
-
-You can specify multiple features at once, and then use [configuration in a `.stylua.toml` file](#configuring-runtime-syntax-selection) to defer syntax selection to runtime.
-
-### GitHub Actions
-
-The [stylua-action](https://github.com/marketplace/actions/stylua) GitHub Action can install and run StyLua.
-This action uses the prebuilt GitHub release binaries, instead of running cargo install, for faster CI startup times.
-
-### pre-commit
-
-You can use StyLua with [pre-commit](https://pre-commit.com/).
-There are 3 possible pre-commit hooks available:
-
-- `stylua`: installs via cargo - requires the Rust toolchain
-- `stylua-system`: runs a `stylua` binary available on the PATH. The binary must be pre-installed
-- `stylua-github`: automatically installs the relevant prebuilt binary from GitHub Releases
-
-Add the following to your `.pre-commit-config.yaml` file:
-
-```yaml
-- repo: https://github.com/JohnnyMorganz/StyLua
-  rev: v2.3.1
-  hooks:
-    - id: stylua # or stylua-system / stylua-github
-```
-
-### npm
-
-StyLua is available as a binary [published to npm](https://www.npmjs.com/package/@johnnymorganz/stylua-bin) as `@johnnymorganz/stylua-bin`.
-This is a thin wrapper that installs the binary and makes it available through npm / npx.
-
-```sh
-npx @johnnymorganz/stylua-bin --help
-```
-
-StyLua is also available as a WASM library at [@johnnymorganz/stylua](https://www.npmjs.com/package/@johnnymorganz/stylua).
-It is usable in Node.js, or in the browser (using a bundler).
-
-### Docker
-
-StyLua is available on the [Docker Hub](https://hub.docker.com/r/johnnymorganz/stylua).
-
-If you are using Docker, the easiest way to install StyLua is:
-
-```dockerfile
-COPY --from=JohnnyMorganz/StyLua:2.3.1 /stylua /usr/bin/stylua
-```
-
-### Homebrew
-
-StyLua is available on macOS via the [Homebrew](https://brew.sh) package manager.
-
-```sh
-brew install stylua
-```
-
-### pip / uv
-
-You can install StyLua using pip / uv, by passing in the git repository as the archive URL
-
-```sh
-pip install git+https://github.com/johnnymorganz/stylua
-uv tool install git+https://github.com/johnnymorganz/stylua
-```
-
-### Other Installation Methods
-
-- [VSCode Extension](https://marketplace.visualstudio.com/items?itemName=JohnnyMorganz.stylua)
-- [Aftman](https://github.com/LPGhatguy/aftman)
-
-```sh
-aftman add johnnymorganz/stylua@2.3.1
-```
-
-- A community maintained package repository. Please note, these packages are maintained by third-parties and we do not control their packaging manifests.
-
-[![Community Packages](https://repology.org/badge/vertical-allrepos/stylua.svg?header=Community%20Packages)](https://repology.org/project/stylua/versions)
-
-### Other Editor Integrations
-
-Note that these integrations require the StyLua binary to already be installed and available on your system.
-
-- Sublime: [Sublime Text Package](https://github.com/aerobounce/Sublime-Pretty-Lua)
-- Neovim: [stylua-nvim](https://github.com/ckipp01/stylua-nvim) / [stylua.nvim](https://github.com/wesleimp/stylua.nvim)
-- Zed: [Zed Lua StyLua formatter settings](https://zed.dev/docs/languages/lua#stylua)
-
-## Usage
-
-Once installed, pass the files to format to the CLI:
-
-```sh
-stylua src/ foo.lua bar.lua
-```
-
-This command will format the `foo.lua` and `bar.lua` file, and search down the `src` directory to format any files within it.
-StyLua can also read from stdin, by using `-` as the file name.
 
 ### Glob Filtering
 
@@ -319,7 +209,7 @@ StyLua only offers the following options:
 | `call_parentheses`           | `Always`           | Whether parentheses should be applied on function calls with a single string/table argument. Possible options: `Always`, `NoSingleString`, `NoSingleTable`, `None`, `Input`. `Always` applies parentheses in all cases. `NoSingleString` omits parentheses on calls with a single string argument. Similarly, `NoSingleTable` omits parentheses on calls with a single table argument. `None` omits parentheses in both cases. Note: parentheses are still kept in situations where removal can lead to obscurity (e.g. `foo "bar".setup -> foo("bar").setup`, since the index is on the call result, not the string). `Input` removes all automation and preserves parentheses only if they were present in input code: consistency is not enforced. |
 | `space_after_function_names` | `Never`            | Specify whether to add a space between the function name and parentheses. Possible options: `Never`, `Definitions`, `Calls`, or `Always`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `block_newline_gaps`         | `Never`            | Specify whether to preserve leading and trailing newline gaps for blocks. Possible options: `Never`, `Preserve`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `collapse_simple_statement`  | `Never`            | Specify whether to collapse simple statements. Possible options: `Never`, `FunctionOnly`, `ConditionalOnly`, or `Always`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | `padded_brackets`            | `false`            | Whether to add a space between container symbols (`(`, `{`, `[`) and their content.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `type_colon_padding`         | `true`             | Whether to add a space around colons in type definitions.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `collapse_simple_statement`  | `Never`            | Specify whether to collapse simple statements. Possible options: `Never`, `FunctionOnly`, `ConditionalOnly`, or `Always`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | `padded_brackets`            | `true`            | Whether to add a space between container symbols (`(`, `{`, `[`) and their content.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `type_colon_padding`         | `true`             | Whether to add a space around colons in type definitions.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
 Default `stylua.toml`, note you do not need to explicitly specify each option if you want to use the defaults:
 
@@ -334,8 +224,8 @@ call_parentheses = "Always"
 collapse_simple_statement = "Never"
 space_after_function_names = "Never"
 block_newline_gaps = "Never"
-padded_brackets = false
-type_colon_padding = false
+padded_brackets = true
+type_colon_padding = true
 
 [sort_requires]
 enabled = false
