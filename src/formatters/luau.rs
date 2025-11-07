@@ -923,12 +923,16 @@ pub fn format_indexed_type_info(
 }
 
 fn format_type_argument(ctx: &Context, type_argument: &TypeArgument, shape: Shape) -> TypeArgument {
-    const COLON_LEN: usize = ": ".len();
+    let (colon_str, colon_len) = if ctx.config().type_colon_padding {
+        (" : ", 3)
+    } else {
+        (": ", 2)
+    };
 
     let name = match type_argument.name() {
         Some((name, colon_token)) => {
             let name = format_token_reference(ctx, name, shape);
-            let colon_token = fmt_symbol!(ctx, colon_token, ": ", shape);
+            let colon_token = fmt_symbol!(ctx, colon_token, colon_str, shape);
 
             Some((name, colon_token))
         }
@@ -937,7 +941,7 @@ fn format_type_argument(ctx: &Context, type_argument: &TypeArgument, shape: Shap
 
     let shape = shape
         + name.as_ref().map_or(0, |(name, _)| {
-            strip_trivia(name).to_string().len() + COLON_LEN
+            strip_trivia(name).to_string().len() + colon_len
         });
 
     let type_info = format_hangable_type_info(ctx, type_argument.type_info(), shape, 1);
@@ -983,8 +987,14 @@ pub fn format_type_field(
         },
         shape,
     );
-    let colon_token = fmt_symbol!(ctx, type_field.colon_token(), ": ", shape);
-    let shape = shape + access_shape_increment + (strip_leading_trivia(&key).to_string().len() + 2);
+    let (colon_str, colon_len) = if ctx.config().type_colon_padding {
+        (" : ", 3)
+    } else {
+        (": ", 2)
+    };
+    let colon_token = fmt_symbol!(ctx, type_field.colon_token(), colon_str, shape);
+    let shape =
+        shape + access_shape_increment + (strip_leading_trivia(&key).to_string().len() + colon_len);
 
     let mut value = format_type_info(ctx, type_field.value(), shape);
 
@@ -1026,16 +1036,29 @@ pub fn format_type_field_key(
         TypeFieldKey::Name(token) => TypeFieldKey::Name(
             format_token_reference(ctx, token, shape).update_leading_trivia(leading_trivia),
         ),
-        TypeFieldKey::IndexSignature { brackets, inner } => TypeFieldKey::IndexSignature {
-            brackets: format_contained_span(ctx, brackets, shape)
-                .update_leading_trivia(leading_trivia),
-            inner: format_type_info_internal(
+        TypeFieldKey::IndexSignature { brackets, inner } => {
+            let (start_bracket, end_bracket) = brackets.tokens();
+            let (start_bracket_str, end_bracket_str, shape_inc) = if ctx.config().padded_brackets {
+                ("[ ", " ]", 2)
+            } else {
+                ("[", "]", 1)
+            };
+
+            let start_bracket = fmt_symbol!(ctx, start_bracket, start_bracket_str, shape);
+            let end_bracket = fmt_symbol!(ctx, end_bracket, end_bracket_str, shape);
+
+            let brackets = ContainedSpan::new(start_bracket, end_bracket)
+                .update_leading_trivia(leading_trivia);
+
+            let inner = format_type_info_internal(
                 ctx,
                 inner,
                 TypeInfoContext::new().mark_within_table_indexer(),
-                shape + 1,
-            ), // 1 = "["
-        },
+                shape + shape_inc,
+            );
+
+            TypeFieldKey::IndexSignature { brackets, inner }
+        }
         other => panic!("unknown node {:?}", other),
     }
 }
@@ -1489,8 +1512,13 @@ pub fn format_type_specifier(
     type_specifier: &TypeSpecifier,
     shape: Shape,
 ) -> TypeSpecifier {
-    let punctuation = fmt_symbol!(ctx, type_specifier.punctuation(), ": ", shape);
-    let type_info = format_type_info(ctx, type_specifier.type_info(), shape + 2); // 2 = ": "
+    let (punctuation_str, shape_inc) = if ctx.config().type_colon_padding {
+        (" : ", 3)
+    } else {
+        (": ", 2)
+    };
+    let punctuation = fmt_symbol!(ctx, type_specifier.punctuation(), punctuation_str, shape);
+    let type_info = format_type_info(ctx, type_specifier.type_info(), shape + shape_inc);
 
     type_specifier
         .to_owned()

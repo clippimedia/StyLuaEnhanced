@@ -8,7 +8,7 @@ import {
 import fetch, { Headers } from "node-fetch";
 
 const RELEASES_URL =
-  "https://api.github.com/repos/JohnnyMorganz/StyLua/releases";
+  "https://api.github.com/repos/ClippiMedia/StyLuaEnhanced/releases";
 const RELEASES_URL_LATEST = RELEASES_URL + "/latest";
 const SCOPES: string[] = [];
 
@@ -44,12 +44,12 @@ function releaseFromJson(json: any): GitHubRelease {
   return {
     assets: Array.isArray(json.assets)
       ? json.assets.map((asset: any) => ({
-          downloadUrl:
-            typeof asset.browser_download_url === "string"
-              ? asset.browser_download_url
-              : "",
-          name: typeof asset.name === "string" ? asset.name : "",
-        }))
+        downloadUrl:
+          typeof asset.browser_download_url === "string"
+            ? asset.browser_download_url
+            : "",
+        name: typeof asset.name === "string" ? asset.name : "",
+      }))
       : [],
     tagName: typeof json.tag_name === "string" ? json.tag_name : "",
     htmlUrl: typeof json.html_url === "string" ? json.html_url : "",

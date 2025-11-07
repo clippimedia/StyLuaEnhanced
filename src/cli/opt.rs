@@ -199,7 +199,9 @@ pub struct FormatOpts {
     #[structopt(long, arg_enum, ignore_case = true)]
     pub space_after_function_names: Option<ArgSpaceAfterFunctionNames>,
     #[structopt(long)]
-    pub space_between_brackets: bool,
+    pub padded_brackets: bool,
+    #[structopt(long)]
+    pub type_colon_padding: bool,
 }
 
 // Convert [`stylua_lib::Config`] enums into clap-friendly enums

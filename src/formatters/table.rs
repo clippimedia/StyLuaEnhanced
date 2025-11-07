@@ -288,10 +288,19 @@ pub fn create_table_braces(
             ContainedSpan::new(start_brace_token, end_brace_token)
         }
 
-        TableType::SingleLine => ContainedSpan::new(
-            fmt_symbol!(ctx, start_brace, "{ ", shape),
-            fmt_symbol!(ctx, end_brace, " }", shape),
-        ),
+        TableType::SingleLine => {
+            let start_brace = if ctx.config().padded_brackets {
+                fmt_symbol!(ctx, start_brace, "{ ", shape)
+            } else {
+                fmt_symbol!(ctx, start_brace, "{", shape)
+            };
+            let end_brace = if ctx.config().padded_brackets {
+                fmt_symbol!(ctx, end_brace, " }", shape)
+            } else {
+                fmt_symbol!(ctx, end_brace, "}", shape)
+            };
+            ContainedSpan::new(start_brace, end_brace)
+        }
 
         TableType::Empty => {
             let start_brace = fmt_symbol!(ctx, start_brace, "{", shape);

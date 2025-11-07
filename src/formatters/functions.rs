@@ -21,8 +21,8 @@ use crate::{
         block::{format_block, format_last_stmt_no_trivia},
         expression::{format_expression, format_prefix, format_suffix, hang_expression},
         general::{
-            format_contained_punctuated_multiline, format_contained_span, format_end_token,
-            format_punctuated, format_token_reference, EndTokenType,
+            format_contained_punctuated_multiline, format_end_token, format_punctuated,
+            format_token_reference, EndTokenType,
         },
         stmt::format_stmt_no_trivia,
         table::format_table_constructor,
@@ -482,7 +482,11 @@ pub fn format_function_args(
                 // parentheses as well. Otherwise, we just use 1 = opening parentheses.
                 let shape_increment = if hug_table_constructor { 2 } else { 1 };
 
-                let start_parens = format_token_reference(ctx, start_parens, shape);
+                let start_parens = if ctx.config().padded_brackets && !arguments.is_empty() {
+                    fmt_symbol!(ctx, start_parens, "( ", shape)
+                } else {
+                    format_token_reference(ctx, start_parens, shape)
+                };
                 let start_parens = if start_parens.has_trailing_comments(CommentSearch::All)
                     && !arguments.is_empty()
                 {
@@ -493,7 +497,11 @@ pub fn format_function_args(
                     start_parens
                 };
 
-                let end_parens = format_token_reference(ctx, end_parens, shape);
+                let end_parens = if ctx.config().padded_brackets && !arguments.is_empty() {
+                    fmt_symbol!(ctx, end_parens, " )", shape)
+                } else {
+                    format_token_reference(ctx, end_parens, shape)
+                };
                 let parentheses = ContainedSpan::new(start_parens, end_parens);
 
                 let mut arguments =
@@ -833,10 +841,34 @@ pub fn format_function_body(
             format_parameter,
             shape,
         ),
-        false => (
-            format_contained_span(ctx, function_body.parameters_parentheses(), shape),
-            format_singleline_parameters(ctx, function_body, shape),
-        ),
+        false => {
+            let (start_paren, end_paren) = function_body.parameters_parentheses().tokens();
+            let start_paren =
+                if ctx.config().padded_brackets && !function_body.parameters().is_empty() {
+                    fmt_symbol!(ctx, start_paren, "( ", shape)
+                } else {
+                    format_token_reference(ctx, start_paren, shape)
+                };
+            let start_paren = if start_paren.has_trailing_comments(CommentSearch::All)
+                && !function_body.parameters().is_empty()
+            {
+                start_paren.update_trailing_trivia(FormatTriviaType::Append(vec![Token::new(
+                    TokenType::spaces(1),
+                )]))
+            } else {
+                start_paren
+            };
+            let end_paren =
+                if ctx.config().padded_brackets && !function_body.parameters().is_empty() {
+                    fmt_symbol!(ctx, end_paren, " )", shape)
+                } else {
+                    format_token_reference(ctx, end_paren, shape)
+                };
+            (
+                ContainedSpan::new(start_paren, end_paren),
+                format_singleline_parameters(ctx, function_body, shape),
+            )
+        }
     };
 
     #[cfg(feature = "luau")]
