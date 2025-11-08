@@ -9,8 +9,21 @@
 > - - #### Rule Additions
 >     ```yaml
 >     padded_brackets: boolean
->     type_colon_padding: boolean
 >     ```
+>     ### Example
+>     ```luau
+>
+>     -- If padded_brackets is false:
+>     
+>     local function doSomething(foo, bar): {[string] : any}
+>       return {foo = bar}
+>     end
+>
+>     -- If padded_brackets is true:
+>
+>      local function doSomething( foo, bar ): { [ string ] : any }
+>       return { foo = bar }
+>     end
 
 StyLuaEnhanced mainly follows the [Roblox Lua Style Guide](https://roblox.github.io/lua-style-guide/), with *<strike>a few deviations</strike>* **tons of gooey options**!
 <div align="center">
@@ -209,7 +222,8 @@ StyLua only offers the following options:
 | `call_parentheses`           | `Always`           | Whether parentheses should be applied on function calls with a single string/table argument. Possible options: `Always`, `NoSingleString`, `NoSingleTable`, `None`, `Input`. `Always` applies parentheses in all cases. `NoSingleString` omits parentheses on calls with a single string argument. Similarly, `NoSingleTable` omits parentheses on calls with a single table argument. `None` omits parentheses in both cases. Note: parentheses are still kept in situations where removal can lead to obscurity (e.g. `foo "bar".setup -> foo("bar").setup`, since the index is on the call result, not the string). `Input` removes all automation and preserves parentheses only if they were present in input code: consistency is not enforced. |
 | `space_after_function_names` | `Never`            | Specify whether to add a space between the function name and parentheses. Possible options: `Never`, `Definitions`, `Calls`, or `Always`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `block_newline_gaps`         | `Never`            | Specify whether to preserve leading and trailing newline gaps for blocks. Possible options: `Never`, `Preserve`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `collapse_simple_statement`  | `Never`            | Specify whether to collapse simple statements. Possible options: `Never`, `FunctionOnly`, `ConditionalOnly`, or `Always`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | `padded_brackets`            | `true`            | Whether to add a space between container symbols (`(`, `{`, `[`) and their content.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `type_colon_padding`         | `true`             | Whether to add a space around colons in type definitions.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `collapse_simple_statement`  | `Never`            | Specify whether to collapse simple statements. Possible options: `Never`, `FunctionOnly`, `ConditionalOnly`, or `Always`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |  
+| `padded_brackets`            | `true`             | Whether to add a space between container symbols (`(`, `{`, `[`) and their content.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 
 Default `stylua.toml`, note you do not need to explicitly specify each option if you want to use the defaults:
 
@@ -224,8 +238,8 @@ call_parentheses = "Always"
 collapse_simple_statement = "Never"
 space_after_function_names = "Never"
 block_newline_gaps = "Never"
+
 padded_brackets = true
-type_colon_padding = true
 
 [sort_requires]
 enabled = false
